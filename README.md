@@ -230,3 +230,457 @@ SINGLETON                               STRATEGY
                                             │ Observer  │
                                             └───────────┘
 
+7. Abstract Factory (creazionale)
+Obiettivo
+Fornire un'interfaccia per creare famiglie di prodotti correlati senza specificare le classi concrete.
+
+-Quando usarlo
+Toolkit UI con look-and-feel multipli (Motif, Windows, Mac)
+
+Sistema che deve essere indipendente da come vengono creati i prodotti
+
+-Struttura chiave
+
+AbstractFactory → interfaccia con metodi per creare prodotti
+ConcreteFactory → implementa i metodi per una famiglia specifica
+AbstractProduct → interfaccia per un tipo di prodotto
+ConcreteProduct → prodotto concreto di una famiglia
+Client → usa solo AbstractFactory e AbstractProduct
+
+Diagramma UML (ASCII)
+┌─────────────┐         ┌─────────────────────┐
+│   Client    │         │ <<interface>>       │
+└──────┬──────┘         │ AbstractFactory     │
+       │                ├─────────────────────┤
+       │                │ + createProdottoA() │
+       │                │ + createProdottoB() │
+       │                └──────────┬──────────┘
+       │                           │
+       │                ┌──────────┴──────────┐
+       │                │                     │
+       │         ┌──────▼──────┐       ┌──────▼──────┐
+       │         │ Factory1    │       │ Factory2    │
+       │         │ (Concrete)  │       │ (Concrete)  │
+       │         └──────┬──────┘       └──────┬──────┘
+       │                │                     │
+       ▼                ▼                     ▼
+┌─────────────┐   ┌──────────┐          ┌──────────┐
+│<<interface>>│   │ Prodotto │          │ Prodotto │
+│  ProdottoA  │   │   A1     │          │   A2     │
+└─────────────┘   └──────────┘          └──────────┘
+interface WidgetFactory {
+    Button createButton();
+    ScrollBar createScrollBar();
+}
+
+class MotifFactory implements WidgetFactory {
+    public Button createButton() { return new MotifButton(); }
+    public ScrollBar createScrollBar() { return new MotifScrollBar(); }
+}
+
+class PMFactory implements WidgetFactory {
+    public Button createButton() { return new PMButton(); }
+    public ScrollBar createScrollBar() { return new PMScrollBar(); }
+}
+
+Attenzione in esame
+✅ Utile quando hai famiglie di prodotti che devono essere usati insieme
+
+❌ Aggiungere un nuovo tipo di prodotto è difficile (modifica interfaccia)
+
+8. Adapter (strutturale)
+-Obiettivo
+Convertire l'interfaccia di una classe in un'altra interfaccia che il client si aspetta.
+
+-Quando usarlo
+Usare una classe esistente ma la sua interfaccia non è compatibile
+Integrare librerie di terze parti
+
+-Struttura chiave
+Target → interfaccia attesa dal client
+Client → usa Target
+Adaptee → classe esistente con interfaccia diversa
+Adapter → implementa Target e traduce le chiamate verso Adaptee
+
+┌────────┐         ┌─────────────────┐
+│ Client │────────►│ <<interface>>   │
+└────────┘         │   Target        │
+                   ├─────────────────┤
+                   │ + request()     │
+                   └────────┬────────┘
+                            │
+                   ┌────────▼────────┐
+                   │    Adapter      │
+                   ├─────────────────┤
+                   │ - adaptee       │───────┐
+                   │ + request()     │       │
+                   └─────────────────┘       │
+                                             ▼
+                                   ┌─────────────────┐
+                                   │    Adaptee      │
+                                   ├─────────────────┤
+                                   │ + specificRequest│
+                                   └─────────────────┘
+
+// Adaptee (esistente)
+class TextView {
+    public void getExtent() { /* restituisce dimensioni */ }
+}
+
+// Target (interfaccia attesa)
+interface Shape {
+    void boundingBox();
+}
+
+// Adapter
+class TextShape implements Shape {
+    private TextView textView;
+    public TextShape(TextView tv) { this.textView = tv; }
+    public void boundingBox() {
+        textView.getExtent(); // traduce
+    }
+}
+
+Attenzione in esame
+❌ Non confondere con Bridge (Adapter è per interfacce incompatibili)
+
+✅ Esistono due varianti: object adapter (per composizione) e class adapter (per ereditarietà multipla)
+
+9. Bridge (strutturale)
+Obiettivo
+Separare un'astrazione dalla sua implementazione in modo che possano variare indipendentemente.
+
+-Quando usarlo
+Quando non si vuole un legame permanente tra astrazione e implementazione
+Quando sia astrazioni che implementazioni devono essere estendibili tramite sottoclassi
+
+-Struttura chiave
+Abstraction → interfaccia astratta
+RefinedAbstraction → estende Abstraction
+Implementor → interfaccia per implementazioni
+ConcreteImplementor → implementazioni concrete
+
+┌─────────────────┐         ┌─────────────────┐
+│  Abstraction    │────────►│ <<interface>>   │
+├─────────────────┤         │  Implementor    │
+│ - imp           │         ├─────────────────┤
+├─────────────────┤         │ + operationImp()│
+│ + operation()   │         └─────────────────┘
+└────────┬────────┘                  △
+         │                           │
+         ▼                   ┌───────┴───────┐
+┌─────────────────┐           │               │
+│RefinedAbstraction│       ┌───▼───┐       ┌───▼───┐
+└─────────────────┘       │ Conv │       │ Conv │
+                          │  Impl1│       │  Impl2│
+                          └──────┘       └──────┘
+
+// Implementor
+interface WindowImp {
+    void drawLine();
+    void drawText();
+}
+
+// ConcreteImplementor
+class XWindowImp implements WindowImp {
+    public void drawLine() { /* X11 specific */ }
+    public void drawText() { /* X11 specific */ }
+}
+
+// Abstraction
+abstract class Window {
+    protected WindowImp imp;
+    public Window(WindowImp imp) { this.imp = imp; }
+    abstract void draw();
+}
+
+// RefinedAbstraction
+class IconWindow extends Window {
+    public IconWindow(WindowImp imp) { super(imp); }
+    void draw() {
+        imp.drawLine();
+        imp.drawText();
+    }
+}
+
+Attenzione in esame
+✅ Bridge separa cosa (astrazione) da come (implementazione)
+
+❌ Non confondere con Adapter (Adapter converte interfacce, Bridge le separa)
+
+10. Composite (strutturale)
+Obiettivo
+Comporre oggetti in strutture ad albero per rappresentare gerarchie parte-tutto.
+I client trattano singoli oggetti e composizioni in modo uniforme.
+
+Quando usarlo
+Editor grafici (forme semplici e composte)
+
+Menu con sottomenu
+
+File system (file e cartelle)
+
+Struttura chiave
+Component → interfaccia per foglie e compositi
+
+Leaf → oggetto senza figli
+
+Composite → oggetto con figli
+
+Client → manipola tutto tramite Component
+
+Diagramma UML (ASCII)
+text
+┌─────────────────┐
+│ <<interface>>   │
+│   Component     │
+├─────────────────┤
+│ + operation()   │
+│ + add()         │
+│ + remove()      │
+│ + getChild()    │
+└────────┬────────┘
+         │
+    ┌────┴────┐
+    │         │
+    ▼         ▼
+┌───────┐  ┌──────────┐
+│ Leaf  │  │ Composite│
+├───────┤  ├──────────┤
+│operation│  │+add()    │
+└───────┘  │+remove() │
+           │+operation│
+           └──────────┘
+Esempio mentale (Java)
+java
+interface Graphic {
+    void draw();
+    void add(Graphic g);
+    void remove(Graphic g);
+}
+
+class Rectangle implements Graphic {
+    public void draw() { /* disegna rettangolo */ }
+    public void add(Graphic g) { /* non fa nulla */ }
+    public void remove(Graphic g) { /* non fa nulla */ }
+}
+
+class Picture implements Graphic {
+    private List<Graphic> children = new ArrayList<>();
+    public void draw() {
+        for (Graphic g : children) g.draw();
+    }
+    public void add(Graphic g) { children.add(g); }
+    public void remove(Graphic g) { children.remove(g); }
+}
+Attenzione in esame
+✅ Il client tratta foglie e compositi in modo uniforme
+
+❌ Non confondere con Decorator (Composite è per strutture, Decorator per aggiungere comportamento)
+
+11. Decorator (strutturale)
+Obiettivo
+Aggiungere dinamicamente responsabilità aggiuntive a un oggetto senza usare ereditarietà.
+
+Quando usarlo
+Aggiungere bordi, scrollbar, ombre a finestre
+
+Aggiungere funzionalità a stream (es. compressione, crittografia)
+
+Struttura chiave
+Component → interfaccia dell'oggetto base
+
+ConcreteComponent → oggetto concreto da decorare
+
+Decorator → mantiene un riferimento a Component e implementa l'interfaccia
+
+ConcreteDecorator → aggiunge comportamento
+
+Diagramma UML (ASCII)
+text
+┌─────────────────┐
+│ <<interface>>   │
+│   Component     │
+├─────────────────┤
+│ + operation()   │
+└────────┬────────┘
+         │
+    ┌────┴────┐
+    │         │
+    ▼         ▼
+┌──────────┐  ┌─────────────────┐
+│Concrete  │  │   Decorator     │
+│Component │  ├─────────────────┤
+└──────────┘  │ - component     │───────┐
+              │ + operation()   │       │
+              └────────┬────────┘       │
+                       │                │
+                       ▼                │
+              ┌─────────────────┐       │
+              │ConcreteDecorator│       │
+              ├─────────────────┤       │
+              │ + operation()   │       │
+              │ + addedBehavior │◄──────┘
+              └─────────────────┘
+Esempio mentale (Java)
+java
+interface Window {
+    void draw();
+}
+
+class SimpleWindow implements Window {
+    public void draw() { /* disegna finestra base */ }
+}
+
+class ScrollBarDecorator implements Window {
+    private Window window;
+    public ScrollBarDecorator(Window w) { this.window = w; }
+    public void draw() {
+        window.draw();
+        drawScrollBar(); // comportamento aggiunto
+    }
+    private void drawScrollBar() { /* disegna scrollbar */ }
+}
+Attenzione in esame
+✅ Alternativa più flessibile alla sottoclasse (evita esplosione di classi)
+
+❌ Non confondere con Composite (Decorator aggiunge comportamento, Composite aggrega oggetti)
+
+12. Facade (strutturale)
+-Obiettivo
+Fornire un'interfaccia unificata e semplificata a un sottosistema complesso.
+
+-Quando usarlo
+Compilatore (nasconde Scanner, Parser, CodeGenerator)
+Sistema complesso con molte classi interdipendenti
+
+-Struttura chiave
+Facade → offre metodi semplici che delegano a sottosistemi
+
+Subsystem classes → classi complesse del sottosistema (non conoscono Facade)
+
+Diagramma UML (ASCII)
+text
+┌─────────────┐
+│   Client    │
+└──────┬──────┘
+       │
+       ▼
+┌─────────────┐
+│   Facade    │─────────────────────────┐
+├─────────────┤                         │
+│ + simpleOp()│                         │
+└─────────────┘                         │
+       │                                 │
+       ├────────────┐         ┌──────────┴──────────┐
+       │            │         │                     │
+       ▼            ▼         ▼                     ▼
+┌──────────┐  ┌──────────┐  ┌──────────┐     ┌──────────┐
+│ SubsysA  │  │ SubsysB  │  │ SubsysC  │     │ SubsysD  │
+└──────────┘  └──────────┘  └──────────┘     └──────────┘
+Esempio mentale (Java)
+java
+// Sottosistema complesso
+class Scanner { void scan() { /* ... */ } }
+class Parser { void parse() { /* ... */ } }
+class CodeGenerator { void generate() { /* ... */ } }
+
+// Facade
+class Compiler {
+    public void compile(String code) {
+        new Scanner().scan();
+        new Parser().parse();
+        new CodeGenerator().generate();
+    }
+}
+
+// Client
+class Client {
+    public void main() {
+        new Compiler().compile("code");
+    }
+}
+Attenzione in esame
+✅ Riduce dipendenze tra client e sottosistema
+
+✅ Non impedisce al client di usare direttamente le classi del sottosistema se necessario
+
+13. Proxy (strutturale)
+-Obiettivo
+Fornire un sostituto o placeholder per controllare l'accesso a un oggetto.
+
+Tipi comuni
+Virtual proxy → crea oggetto on demand (es. immagine caricata solo quando serve)
+
+Protection proxy → controlla accessi (es. permessi utente)
+
+Remote proxy → oggetto in altro spazio di memoria
+
+Struttura chiave
+Subject → interfaccia comune
+
+RealSubject → oggetto reale
+
+Proxy → mantiene riferimento a RealSubject, controlla/ritarda accesso
+
+Diagramma UML (ASCII)
+text
+┌─────────────────┐
+│ <<interface>>   │
+│   Subject       │
+├─────────────────┤
+│ + request()     │
+└────────┬────────┘
+         │
+    ┌────┴────┐
+    │         │
+    ▼         ▼
+┌──────────┐  ┌──────────┐
+│RealSubject│  │  Proxy   │
+├──────────┤  ├──────────┤
+│+request()│  │+request()│──► controlla/crea RealSubject
+└──────────┘  └──────────┘
+Esempio mentale (Java)
+java
+interface Image {
+    void display();
+}
+
+class RealImage implements Image {
+    private String filename;
+    public RealImage(String filename) {
+        this.filename = filename;
+        loadFromDisk();
+    }
+    private void loadFromDisk() { /* operazione pesante */ }
+    public void display() { /* display */ }
+}
+
+class ProxyImage implements Image {
+    private RealImage realImage;
+    private String filename;
+    public ProxyImage(String filename) { this.filename = filename; }
+    public void display() {
+        if (realImage == null) realImage = new RealImage(filename);
+        realImage.display();
+    }
+}
+Attenzione in esame
+✅ Utile per lazy loading, controllo accessi, logging
+
+❌ Non confondere con Decorator (Proxy controlla accesso, Decorator aggiunge comportamento)
+
+14. Tabella riassuntiva completa (GoF)
+Singleton	Creazionale	una sola istanza
+Abstract Factory	Creazionale	famiglie di prodotti correlati
+Adapter	Strutturale	converte interfacce incompatibili
+Bridge	Strutturale	separa astrazione da implementazione
+Composite	Strutturale	parte-tutto uniforme (albero)
+Decorator	Strutturale	aggiunge comportamento dinamicamente
+Facade	Strutturale	interfaccia semplificata a sottosistema
+Proxy	Strutturale	controlla accesso a oggetto
+Strategy	Comportamentale	algoritmi intercambiabili
+Observer	Comportamentale	notifica automatica uno-a-molti
+
+
+![alt text](image.png)
