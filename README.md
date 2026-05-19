@@ -875,3 +875,190 @@ Pattern	Frase chiave
 Composite	parte-tutto, albero, file e cartelle
 Decorator	aggiunge comportamento dinamicamente
 Observer	update() quando il subject cambia
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1. Pattern più probabili da disegnare all'esame
+Secondo il tuo PDF, i pattern che chiedono più spesso di disegnare sono:
+
+Singleton
+Strategy
+Observer
+Composite
+Adapter
+Decorator
+
+3. Dritte per disegnare ciascun pattern
+🔹 SINGLETON (il più semplice)
+┌─────────────────────┐
+│     Singleton       │
+├─────────────────────┤
+│ - instance          │
+│   : Singleton       │
+├─────────────────────┤
+│ - Singleton()       │
+│ + getInstance()     │
+│   : Singleton       │
+└─────────────────────┘
+Regola:
+
+Costruttore -
+Attributo statico - (sottolineato)
+Metodo statico + (sottolineato)
+Una sola casella
+
+🔹 STRATEGY (3 caselle + 1 interfaccia)
+┌─────────────┐       ┌─────────────────────┐
+│  Context    │       │   <<interface>>     │
+├─────────────┤       │     Strategy        │
+│ - strategy  │──────►├─────────────────────┤
+├─────────────┤       │ + algorithm()       │
+│ + setStrategy()     └─────────────────────┘
+│ + execute()                △
+└─────────────┘              │
+                             │
+              ┌──────────────┼──────────────┐
+              │              │              │
+              ▼              ▼              ▼
+       ┌──────────┐   ┌──────────┐   ┌──────────┐
+       │Concrete  │   │Concrete  │   │Concrete  │
+       │Strategy1 │   │Strategy2 │   │Strategy3 │
+       ├──────────┤   ├──────────┤   ├──────────┤
+       │+algorithm│   │+algorithm│   │+algorithm│
+       └──────────┘   └──────────┘   └──────────┘
+Regola:
+
+Context → Strategy (freccia semplice o a diamante)
+Strategy è <<interface>>
+ConcreteStrategy → Strategy (freccia tratteggiata con triangolo bianco)
+
+3 ConcreteStrategy 
+
+🔹 OBSERVER (Subject + Observer)
+┌─────────────┐       ┌─────────────────────┐
+│  Subject    │       │   <<interface>>     │
+├─────────────┤       │     Observer        │
+│ - observers │──────►├─────────────────────┤
+│   : List    │       │ + update()          │
+├─────────────┤       └─────────────────────┘
+│ + attach()  │                △
+│ + detach()  │                │
+│ + notify()  │                │
+└─────────────┘                │
+                               │
+              ┌────────────────┼────────────────┐
+              │                │                │
+              ▼                ▼                ▼
+       ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
+       │ ConcreteObs1 │ │ ConcreteObs2 │ │ ConcreteObs3 │
+       ├──────────────┤ ├──────────────┤ ├──────────────┤
+       │ + update()   │ │ + update()   │ │ + update()   │
+       └──────────────┘ └──────────────┘ └──────────────┘
+Regola:
+
+Subject → Observer (freccia semplice)
+Observer è <<interface>>
+ConcreteObserver → Observer (freccia tratteggiata)
+Subject ha Lista di Observer
+
+🔹 COMPOSITE (parte-tutto)
+text
+┌─────────────────┐
+│ <<interface>>   │
+│   Component     │
+├─────────────────┤
+│ + operation()   │
+│ + add()         │
+│ + remove()      │
+│ + getChild()    │
+└────────┬────────┘
+         │
+    ┌────┴────┐
+    │         │
+    ▼         ▼
+┌───────┐  ┌──────────┐
+│ Leaf  │  │ Composite│
+├───────┤  ├──────────┤
+│operation│  │+add()    │
+└───────┘  │+remove() │
+           │+operation│
+           └──────────┘
+Regola:
+Component è <<interface>>
+Leaf e Composite → Component (freccia tratteggiata)
+Composite ha relazione con se stesso (1 a molti)
+
+🔹 ADAPTER (Target + Adaptee)
+┌────────┐       ┌─────────────────┐
+│ Client │──────►│ <<interface>>   │
+└────────┘       │    Target       │
+                 ├─────────────────┤
+                 │ + request()     │
+                 └────────┬────────┘
+                          │
+                 ┌────────▼────────┐
+                 │    Adapter      │
+                 ├─────────────────┤
+                 │ - adaptee       │───────┐
+                 │ + request()     │       │
+                 └─────────────────┘       │
+                                           ▼
+                                 ┌─────────────────┐
+                                 │    Adaptee      │
+                                 ├─────────────────┤
+                                 │ + specificRequest│
+                                 └─────────────────┘
+Regola:
+Target è <<interface>>
+Adapter → Target (freccia tratteggiata)
+Adapter → Adaptee (freccia semplice o a diamante, "ha un")
+
+🔹 DECORATOR (wrapper)
+┌─────────────────┐
+│ <<interface>>   │
+│   Component     │
+├─────────────────┤
+│ + operation()   │
+└────────┬────────┘
+         │
+    ┌────┴────┐
+    │         │
+    ▼         ▼
+┌──────────┐  ┌─────────────────┐
+│Concrete  │  │   Decorator     │
+│Component │  ├─────────────────┤
+└──────────┘  │ - component     │───────┐
+              │ + operation()   │       │
+              └────────┬────────┘       │
+                       │                │
+                       ▼                │
+              ┌─────────────────┐       │
+              │ConcreteDecorator│       │
+              ├─────────────────┤       │
+              │ + operation()   │       │
+              │ + addedBehavior │◄──────┘
+              └─────────────────┘
+Regola:
+Component è <<interface>>
+Decorator → Component (freccia tratteggiata)
+Decorator ha composizione con Component (diamante pieno)
+
