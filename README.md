@@ -688,24 +688,6 @@ Observer	Comportamentale	notifica automatica uno-a-molti
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 DESIGN PATTERNS — 10 DOMANDE A CROCETTE
 1. Quale pattern garantisce che una classe abbia una sola istanza?
 
@@ -875,23 +857,6 @@ Pattern	Frase chiave
 Composite	parte-tutto, albero, file e cartelle
 Decorator	aggiunge comportamento dinamicamente
 Observer	update() quando il subject cambia
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
