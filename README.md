@@ -684,3 +684,194 @@ Observer	Comportamentale	notifica automatica uno-a-molti
 
 
 ![alt text](image.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DESIGN PATTERNS — 10 DOMANDE A CROCETTE
+1. Quale pattern garantisce che una classe abbia una sola istanza?
+
+A) Strategy
+
+B) Observer
+
+C) Singleton
+
+D) Adapter
+
+2. In quale pattern si definisce una famiglia di algoritmi intercambiabili?
+
+A) Singleton
+
+B) Strategy
+
+C) Observer
+
+D) Facade
+
+3. In Observer, come si chiama il metodo che viene chiamato automaticamente quando il Subject cambia?
+
+A) execute()
+
+B) getInstance()
+
+C) update()
+
+D) request()
+
+4. Quale pattern converte l’interfaccia di una classe in un’altra interfaccia attesa dal client?
+
+A) Bridge
+
+B) Adapter
+
+C) Proxy
+
+D) Decorator
+
+5. In Singleton, il costruttore deve essere:
+
+A) public
+
+B) private
+
+C) protected
+
+D) abstract
+
+6. Quale pattern viene usato per rappresentare gerarchie parte-tutto (es. file e cartelle)?
+
+A) Composite
+
+B) Decorator
+
+C) Facade
+
+D) Strategy
+
+7. Quale pattern fornisce un’interfaccia semplificata a un sottosistema complesso?
+
+A) Proxy
+
+B) Bridge
+
+C) Facade
+
+D) Adapter
+
+8. In Strategy, la relazione tra Context e Strategy è di tipo:
+
+A) Ereditarietà
+
+B) Aggregazione/composizione
+
+C) Realizzazione (implements)
+
+D) Dipendenza temporanea
+
+9. Quale pattern separa astrazione e implementazione in modo che possano variare indipendentemente?
+
+A) Adapter
+
+B) Bridge
+
+C) Decorator
+
+D) Proxy
+
+10. Quale pattern aggiunge dinamicamente nuove responsabilità a un oggetto senza usare ereditarietà?
+
+A) Composite
+
+B) Facade
+
+C) Decorator
+
+D) Strategy
+
+✅ FOGLIO RISPOSTE
+Domanda	Risposta
+1	C
+2	B
+3	C
+4	B
+5	B
+6	A
+7	C
+8	B
+9	B
+10	C
+
+
+Questa risposta è generate da IA. Controllarne l'accuratezza.
+1. C
+2. B
+3. B
+4. B
+5. B
+6. B
+7. C
+8. B
+9. B
+10. B
+Grazie per aver risposto! Analizzo subito le tue risposte e confronto con quelle corrette.
+
+✅ CORREZIONE — 10 DOMANDE A CROCETTE
+Domanda	La tua risposta	Risposta corretta	Esito
+1	C (Singleton)	C	✅ Corretto
+2	B (Strategy)	B	✅ Corretto
+3	B	C (update)	❌ Sbagliato
+4	B (Adapter)	B	✅ Corretto
+5	B (private)	B	✅ Corretto
+6	B	A (Composite)	❌ Sbagliato
+7	C (Facade)	C	✅ Corretto
+8	B (aggregazione)	B	✅ Corretto
+9	B (Bridge)	B	✅ Corretto
+10	B	C (Decorator)	❌ Sbagliato
+Totale: 7/10 ✅
+
+📌 Spiegazione degli errori
+Domanda 3
+"In Observer, come si chiama il metodo che viene chiamato automaticamente quando il Subject cambia?"
+
+Update è il nome standard (es. update()).
+
+Altri nomi non sono usati in Observer.
+
+Domanda 6
+"Quale pattern viene usato per rappresentare gerarchie parte-tutto (es. file e cartelle)?"
+
+Composite è il pattern delle strutture ad albero.
+
+Decorator aggiunge comportamento, non rappresenta gerarchie parte-tutto.
+
+Domanda 10
+"Quale pattern aggiunge dinamicamente nuove responsabilità a un oggetto senza usare ereditarietà?"
+
+Decorator è il pattern per aggiungere comportamento dinamicamente.
+
+Bridge separa astrazione/implementazione, non aggiunge responsabilità.
+
+📊 Riepilogo per te (da ricordare)
+Pattern	Frase chiave
+Composite	parte-tutto, albero, file e cartelle
+Decorator	aggiunge comportamento dinamicamente
+Observer	update() quando il subject cambia
